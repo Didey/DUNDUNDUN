@@ -48,7 +48,7 @@ public class KeyInput extends KeyAdapter implements KeyListener {
 					tempObject.setVelX(Player.MOVE_SPEED);
 					Player.facingRight = true;
 				}
-				if (key == KeyEvent.VK_A){	
+				if (key == KeyEvent.VK_A ){	
 					tempObject.setVelX(-Player.MOVE_SPEED);
 					Player.facingRight = false;
 				}

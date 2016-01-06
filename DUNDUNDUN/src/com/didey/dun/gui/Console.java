@@ -108,13 +108,13 @@ public class Console extends JPanel implements ActionListener {
 					textArea.append(newline + "Invalid speed value, please try again.(format: speed <number>)");
 				}
 			} else {
-				SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-				String time = sdf.format(new Date());
-
-				textArea.append(newline + "[" + time + "]  " + consoleInput);
+				textArea.append(newline + consoleInput);
 			}
 
-			
+			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+			String time = sdf.format(new Date());
+
+			textArea.append(newline + "[" + time + "]  " + consoleInput);
 			textField.selectAll();
 
 			// Double check text visibility.

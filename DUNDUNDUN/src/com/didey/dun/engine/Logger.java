@@ -2,7 +2,7 @@ package com.didey.dun.engine;
 
 public class Logger {
 	
-	public static int loggingLevel = 0; //0 - All, 1 - Warn, 2 - Warn + Debug, 4 - None
+	public static int loggingLevel = 0; //0 - All, 1 - Warn, 2 - Warn + Debug, 4 - None 
 
 	public static void info(String info){
 		if (loggingLevel == 0) {

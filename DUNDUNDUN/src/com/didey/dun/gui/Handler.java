@@ -19,7 +19,7 @@ public class Handler {
 
 			tempObject.tick(object);
 		}
-	}
+	} 
 
 	public void render(Graphics g) {
 		for (int i = 0; i < object.size(); i++) {

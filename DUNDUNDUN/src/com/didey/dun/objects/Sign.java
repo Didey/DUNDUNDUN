@@ -20,11 +20,13 @@ public class Sign extends GameObject {
 	public static int signX;
 	public static int signY;
 	
+	private String write;
+	
 	public static boolean showInstructions;
 	
 	private BufferedImage image;
 	
-	public Sign(float x, float y, ObjectId id) {
+	public Sign(float x, float y, String text, ObjectId id) {
 		super(x, y, id);
 		try {
 			image = ImageIO.read(getClass().getResource("/sign.png"));
@@ -33,6 +35,8 @@ public class Sign extends GameObject {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		write = text;
 	}
 
 	
@@ -45,6 +49,8 @@ public class Sign extends GameObject {
 		signX = (int)x;
 		signY = (int)y;
 		g.drawImage(image, (int)x, (int)y, null);
+		g.drawString(write, signX, signY - 50);
+
 		
 		Graphics2D g2d = (Graphics2D) g;
 		if(Game.debugMode){
