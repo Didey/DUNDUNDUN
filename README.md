@@ -5,7 +5,7 @@ developed by TheDrink with help from Dx724
 
 #Screenshots
 
-[Signs!](http://i.imgur.com/TScjPCW.png)
+![Signs!](http://i.imgur.com/TScjPCW.png)
 
 
 #Controls
