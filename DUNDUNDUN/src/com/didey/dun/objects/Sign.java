@@ -22,6 +22,8 @@ public class Sign extends GameObject {
 	
 	private String write;
 	
+	private int offset;
+	
 	public static boolean showInstructions;
 	
 	private BufferedImage image;
@@ -35,23 +37,22 @@ public class Sign extends GameObject {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
 		write = text;
 	}
 
-	
 	public void tick(LinkedList<GameObject> object) {
 		
 	}
-
 	
 	public void render(Graphics g) {
 		signX = (int)x;
 		signY = (int)y;
+		int drawX = write.length();
+		System.out.println(Integer.toString(drawX));
 		g.drawImage(image, (int)x, (int)y, null);
-		g.drawString(write, signX, signY - 50);
-
-		
+		g.setColor(Color.BLACK);
+		g.drawString(write, signX - offset, signY - 50);
+	
 		Graphics2D g2d = (Graphics2D) g;
 		if(Game.debugMode){
 			g.setColor(Color.RED);
@@ -60,7 +61,6 @@ public class Sign extends GameObject {
 		
 	}
 
-	
 	public Rectangle getBounds() {
 		return new Rectangle((int)x, (int)y, width, height);
 	}

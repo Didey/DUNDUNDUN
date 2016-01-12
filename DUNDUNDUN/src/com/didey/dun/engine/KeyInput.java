@@ -14,6 +14,8 @@ public class KeyInput extends KeyAdapter implements KeyListener {
 
 	BufferedImageLoader loader = new BufferedImageLoader();
 
+	public static int jumps;
+	
 	Handler handler;
 	Game game = new Game();
 	public KeyInput(Handler handler) {
@@ -52,9 +54,12 @@ public class KeyInput extends KeyAdapter implements KeyListener {
 					tempObject.setVelX(-Player.MOVE_SPEED);
 					Player.facingRight = false;
 				}
-				if (key == KeyEvent.VK_SPACE && !tempObject.isJumping() || key == KeyEvent.VK_W && !tempObject.isJumping()) {
-					tempObject.setJumping(true);
-					tempObject.setVelY(-15);
+				if (key == KeyEvent.VK_SPACE || key == KeyEvent.VK_W ) {
+					if(jumps < 2){
+						tempObject.setJumping(true);
+						tempObject.setVelY(-15);
+						jumps++;
+					}
 				}
 			}
 

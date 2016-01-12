@@ -28,7 +28,6 @@ public class Block extends GameObject{
 		
 	}
 
-	
 	public void render(Graphics g) 
 	{
 		if(type == 0){

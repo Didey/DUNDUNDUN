@@ -1,8 +1,7 @@
 package com.didey.dun.engine;
 
-public enum ObjectId 
-{
+public enum ObjectId {
 
-	Player(), Block(), Sign(), E_Icon();
+	Player(), Block(), Sign(), QuickSand();
 
 }

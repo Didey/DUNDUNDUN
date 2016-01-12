@@ -14,6 +14,7 @@ import com.didey.dun.engine.ObjectId;
 import com.didey.dun.engine.Texture;
 import com.didey.dun.objects.Block;
 import com.didey.dun.objects.Player;
+import com.didey.dun.objects.QuickSand;
 import com.didey.dun.objects.Sign;
 
 public class Game extends Canvas implements Runnable {
@@ -165,14 +166,21 @@ public class Game extends Canvas implements Runnable {
 
 				if (red == 255 && green == 255 & blue == 255)
 					handler.addObject(new Block(xx * 32, yy * 32, 1, ObjectId.Block)); // grass
+				
 				if (red == 128 && green == 128 & blue == 128)
 					handler.addObject(new Block(xx * 32, yy * 32, 0, ObjectId.Block)); // dirt
+				
 				if (red == 0 && green == 0 & blue == 255)
 					handler.addObject(new Player(xx * 32, yy * 32, handler, ObjectId.Player));
+				
 				if (red == 255 && green == 0 & blue == 0)
-					handler.addObject(new Sign(xx * 32, yy * 32, "test", ObjectId.Sign));
+					handler.addObject(new Sign(xx * 32, yy * 32, "I love me some pure dank memes xdxdxd", ObjectId.Sign));
+				
 				if (red == 255 && green == 255 & blue == 0)
-					handler.addObject(new Sign(xx * 32, yy * 32, "test 2", ObjectId.Sign));
+					handler.addObject(new Sign(xx * 32, yy * 32, "", ObjectId.Sign));
+				
+				if (red == 255 && green == 0 & blue == 255)
+					handler.addObject(new QuickSand(xx * 32, yy * 32, ObjectId.QuickSand));
 			}
 		}
 

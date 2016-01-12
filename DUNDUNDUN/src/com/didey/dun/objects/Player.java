@@ -9,6 +9,7 @@ import java.util.LinkedList;
 
 import com.didey.dun.engine.Animation;
 import com.didey.dun.engine.GameObject;
+import com.didey.dun.engine.KeyInput;
 import com.didey.dun.engine.ObjectId;
 import com.didey.dun.engine.Texture;
 import com.didey.dun.gui.Game;
@@ -22,13 +23,15 @@ public class Player extends GameObject {
 	public static float MAX_SPEED = 10;
 	public static boolean facingRight = true;
 	public static float MOVE_SPEED = 5;
-
+	
+	
 	public static boolean showInstructions = false;
 
-	private Font pausedFont = new Font("Impact", Font.PLAIN, 34);
+	private Font pausedFont = new Font("monospace", Font.PLAIN, 34);
 	public static int getPX;
 	public static int getPY;
-
+	private static int PLAYER_ANIM_SPEED = 10;
+	
 	private Handler handler;
 
 	Texture tex = Game.getInstance();
@@ -39,13 +42,27 @@ public class Player extends GameObject {
 		super(x, y, id);
 		this.handler = handler;
 
-		playerWalk = new Animation(10, tex.player[1], tex.player[2]);
+		playerWalk = new Animation(PLAYER_ANIM_SPEED, tex.player[1], tex.player[2]);
 	}
 
 	private void Collision(LinkedList<GameObject> object) {
 		for (int i = 0; i < handler.object.size(); i++) {
 			GameObject tempObject = handler.object.get(i);
 
+			
+			if (tempObject.getId() == ObjectId.QuickSand) {
+				if (getBounds().intersects(tempObject.getBounds())) {
+					MOVE_SPEED = (int)2.5;
+					velY = 0;
+					falling = false;
+					jumping = false;
+					KeyInput.jumps = 0;
+				} else {
+					falling = true;
+				}
+			}
+			
+			
 			if (tempObject.getId() == ObjectId.Sign) {
 				if (getBounds().intersects(tempObject.getBounds())) {
 					// sign collision
@@ -59,6 +76,7 @@ public class Player extends GameObject {
 				if (getBoundsTop().intersects(tempObject.getBounds())) {
 					y = tempObject.getY() + 32;
 					velY = 0;
+					MOVE_SPEED = (int)5;
 				}
 
 				if (getBounds().intersects(tempObject.getBounds())) {
@@ -66,17 +84,24 @@ public class Player extends GameObject {
 					velY = 0;
 					falling = false;
 					jumping = false;
+					KeyInput.jumps = 0;
+					MOVE_SPEED = (int)5;
 				} else
 					falling = true;
 
 				if (getBoundsRight().intersects(tempObject.getBounds())) {
 					x = tempObject.getX() - width;
+					KeyInput.jumps = 0;
+					MOVE_SPEED = (int)5;
 				}
 
 				if (getBoundsLeft().intersects(tempObject.getBounds())) {
 					x = tempObject.getX() + 35;
+					KeyInput.jumps = 0;
+					MOVE_SPEED = (int)5;
 				}
 			}
+			
 		}
 	}
 
@@ -151,10 +176,13 @@ public class Player extends GameObject {
 			g2d.draw(getBoundsLeft());
 			g2d.draw(getBoundsTop());
 
-			g.drawString("PLAYER X: " + Integer.toString(getPX), getPX - 300, getPY - 200);
-			g.drawString("PLAYER Y: " + Integer.toString(getPY), getPX - 300, getPY - 150);
-			g.drawString("FPS: " + Integer.toString(Game.fps), getPX - 300, getPY - 100);
-			g.drawString("TICKS: " + Integer.toString(Game.ticks), getPX - 300, getPY - 50);
+			g.setColor(Color.BLUE);
+			g.drawString("PLAYER X: " + Integer.toString(getPX), getPX - 375, getPY - 200);
+			g.drawString("PLAYER Y: " + Integer.toString(getPY), getPX - 375, getPY - 150);
+			g.drawString("FPS: " + Integer.toString(Game.fps), getPX - 375, getPY - 100);
+			g.drawString("TICKS: " + Integer.toString(Game.ticks), getPX - 375, getPY - 50);
+			g.drawString("JUMPS: " + Integer.toString(KeyInput.jumps), getPX - 375, getPY);
+			g.drawString("MOVE_SPEED: " + Float.toString(MOVE_SPEED), getPX + 100, getPY - 200);
 		}
 
 	}
