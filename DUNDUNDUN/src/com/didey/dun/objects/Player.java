@@ -8,6 +8,7 @@ import java.awt.Rectangle;
 import java.util.LinkedList;
 
 import com.didey.dun.engine.Animation;
+import com.didey.dun.engine.GameClient;
 import com.didey.dun.engine.GameObject;
 import com.didey.dun.engine.KeyInput;
 import com.didey.dun.engine.ObjectId;
@@ -131,7 +132,7 @@ public class Player extends GameObject {
 	}
 
 	public void render(Graphics g) {
-
+		
 		g.setFont(pausedFont);
 
 		if (Game.isPaused) {
@@ -139,6 +140,12 @@ public class Player extends GameObject {
 			g.drawString("Game is paused!", getPX - 97, getPY - 10);
 		}
 
+		GameClient.sendServerInfo();
+
+		
+		g.setColor(Color.RED);
+		g.fillRect(GameClient.mpX, GameClient.mpY, (int)width, (int)height);
+		
 		g.setColor(Color.BLUE);
 		if (velX > 0 && !jumping) {
 			playerWalk.drawAnimation(g, (int) x, (int) y, (int) width, (int) height);

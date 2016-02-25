@@ -48,7 +48,7 @@ public class Sign extends GameObject {
 		signX = (int)x;
 		signY = (int)y;
 		int drawX = write.length();
-		System.out.println(Integer.toString(drawX));
+		//System.out.println(Integer.toString(drawX));
 		g.drawImage(image, (int)x, (int)y, null);
 		g.setColor(Color.BLACK);
 		g.drawString(write, signX - offset, signY - 50);

@@ -8,6 +8,7 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
+import com.didey.dun.engine.GameClient;
 import com.didey.dun.engine.KeyInput;
 import com.didey.dun.engine.Logger;
 import com.didey.dun.engine.ObjectId;
@@ -99,8 +100,6 @@ public class Game extends Canvas implements Runnable {
 			if (System.currentTimeMillis() - timer > 1000) {
 				timer += 1000;
 				Logger.info("FPS: " + frames + " TICKS: " + updates);
-				if (frames < 60)
-					Logger.warn("FPS is lower than 60!");
 				fps = frames;
 				ticks = updates;
 				frames = 0;
@@ -117,6 +116,8 @@ public class Game extends Canvas implements Runnable {
 				cam.tick(handler.object.get(i));
 			}
 		}
+	
+
 	}
 
 	private void render() {
