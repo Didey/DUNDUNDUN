@@ -12,11 +12,12 @@ import com.esotericsoftware.kryonet.Listener;
 public class GameClient {
 
 	public static int mpX, mpY;
-	public static Client client = new Client();
-	public static String cords = Player.getPX + " " + Player.getPY;
+	public static Client client;
+	public static String cords;
 	
 	public GameClient(){
-		
+		client = new Client();
+		cords = Player.getPX + " " + player.getPY;
 		Kryo kryo = client.getKryo();
 		kryo.register(Player.class);
 		kryo.register(Game.class);
