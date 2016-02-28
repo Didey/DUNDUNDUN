@@ -20,10 +20,7 @@ public class GameClient {
 		client.addListener(new Listener() {
 			public void received(Connection connection, Object object) {
 				if(object instanceof String){
-<<<<<<< HEAD
 					System.out.println("CLIENT RECEIVED:" + (String)object);
-=======
->>>>>>> origin/master
 					String precor = (String)object;
 					String[] coordinates = precor.split(" ");
 					mpX = Integer.parseInt(coordinates[0]);
@@ -32,10 +29,7 @@ public class GameClient {
 				}
 			}
 		});
-<<<<<<< HEAD
-=======
-		coords = Player.getPX + " " + player.getPY;
->>>>>>> origin/master
+		coords = Player.getPX + " " + Player.getPY;
 		Kryo kryo = client.getKryo();
 		kryo.register(Player.class);
 		kryo.register(Game.class);
@@ -49,10 +43,7 @@ public class GameClient {
 	}
 	
 	public static void sendServerInfo(){
-<<<<<<< HEAD
 		coords = Player.getPX + " " + Player.getPY;
-=======
->>>>>>> origin/master
 		client.sendTCP(coords);
 	}
 }
