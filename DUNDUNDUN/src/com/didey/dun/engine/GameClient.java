@@ -17,6 +17,16 @@ public class GameClient {
 	
 	public GameClient(){
 		client = new Client();
+		client.addListener(new Listener() {
+			public void received(Connection connection, Object object) {
+				if(object instanceof String){
+					String precor = (String)object;
+					String[] coordinates = precor.split(" ");
+					mpX = Integer.parseInt(coordinates[0]);
+					mpY = Integer.parseInt(coordinates[1]);
+				}
+			}
+		});
 		cords = Player.getPX + " " + player.getPY;
 		Kryo kryo = client.getKryo();
 		kryo.register(Player.class);
@@ -32,17 +42,5 @@ public class GameClient {
 	
 	public static void sendServerInfo(){
 		client.sendTCP(cords);
-		
-		client.addListener(new Listener() {
-			public void received(Connection connection, Object object) {
-				if(object instanceof String){
-					String precor = (String)object;
-					String[] cords = precor.split(" ");
-					mpX = Integer.parseInt(cords[0]);
-					mpY = Integer.parseInt(cords[1]);
-				//	System.out.println("CLIENT RECEIVED: " + mpX + " " +  mpY);
-				}
-			}
-		});
 	}
 }
