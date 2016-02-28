@@ -13,7 +13,6 @@ public class GameClient {
 
 	public static int mpX, mpY;
 	public static Client client;
-	public static String coords;
 	
 	public GameClient(){
 		client = new Client();
@@ -25,7 +24,6 @@ public class GameClient {
 					String[] coordinates = precor.split(" ");
 					mpX = Integer.parseInt(coordinates[0]);
 					mpY = Integer.parseInt(coordinates[1]);
-					coords = (String) object;
 				}
 			}
 		});
@@ -43,7 +41,6 @@ public class GameClient {
 	}
 	
 	public static void sendServerInfo(){
-		coords = Player.getPX + " " + Player.getPY;
-		client.sendTCP(coords);
+		client.sendTCP(Player.getPX + " " + Player.getPY);
 	}
 }
