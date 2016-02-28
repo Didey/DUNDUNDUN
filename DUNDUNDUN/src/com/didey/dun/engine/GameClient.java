@@ -13,7 +13,7 @@ public class GameClient {
 
 	public static int mpX, mpY;
 	public static Client client;
-	public static String cords;
+	public static String coords;
 	
 	public GameClient(){
 		client = new Client();
@@ -24,10 +24,11 @@ public class GameClient {
 					String[] coordinates = precor.split(" ");
 					mpX = Integer.parseInt(coordinates[0]);
 					mpY = Integer.parseInt(coordinates[1]);
+					coords = (String) object;
 				}
 			}
 		});
-		cords = Player.getPX + " " + player.getPY;
+		coords = Player.getPX + " " + player.getPY;
 		Kryo kryo = client.getKryo();
 		kryo.register(Player.class);
 		kryo.register(Game.class);
@@ -41,6 +42,6 @@ public class GameClient {
 	}
 	
 	public static void sendServerInfo(){
-		client.sendTCP(cords);
+		client.sendTCP(coords);
 	}
 }
