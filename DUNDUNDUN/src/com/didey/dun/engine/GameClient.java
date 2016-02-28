@@ -24,6 +24,7 @@ public class GameClient {
 					String[] coordinates = precor.split(" ");
 					mpX = Integer.parseInt(coordinates[0]);
 					mpY = Integer.parseInt(coordinates[1]);
+					cords = (String) object; //Variable name by Didey...
 				}
 			}
 		});
