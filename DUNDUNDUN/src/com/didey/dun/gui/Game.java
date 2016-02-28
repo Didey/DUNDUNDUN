@@ -45,6 +45,8 @@ public class Game extends Canvas implements Runnable {
 	Random rand = new Random();
 
 	private void init() {
+		new GameClient();
+		
 		WIDTH = getWidth();
 		HEIGHT = getHeight();
 

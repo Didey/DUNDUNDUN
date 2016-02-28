@@ -139,9 +139,9 @@ public class Player extends GameObject {
 			g.setColor(Color.MAGENTA);
 			g.drawString("Game is paused!", getPX - 97, getPY - 10);
 		}
-
+		
+		
 		GameClient.sendServerInfo();
-
 		
 		g.setColor(Color.RED);
 		g.fillRect(GameClient.mpX, GameClient.mpY, (int)width, (int)height);
