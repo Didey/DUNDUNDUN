@@ -35,18 +35,11 @@ public class Block extends GameObject{
 		} else {
 			g.drawImage(tex.block[1], (int)x, (int)y, null);
 		}
-		
-		Graphics2D g2d = (Graphics2D) g;
-		if(Game.debugMode){
-			g.setColor(Color.RED);
-			g2d.draw(getBounds());
-		}
 	} 
 
 
 	@Override
 	public Rectangle getBounds() {
-		
 		return new Rectangle((int)x, (int)y, 32, 32);
 	}
 }

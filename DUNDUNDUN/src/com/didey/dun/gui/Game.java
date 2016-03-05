@@ -4,19 +4,22 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.Random;
 
-import com.didey.dun.engine.GameClient;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
+
 import com.didey.dun.engine.KeyInput;
 import com.didey.dun.engine.Logger;
 import com.didey.dun.engine.ObjectId;
 import com.didey.dun.engine.Texture;
-import com.didey.dun.objects.Block;
 import com.didey.dun.objects.Player;
-import com.didey.dun.objects.QuickSand;
-import com.didey.dun.objects.Sign;
 
 public class Game extends Canvas implements Runnable {
 
@@ -38,14 +41,18 @@ public class Game extends Canvas implements Runnable {
 
 	public static BufferedImage level = null;
 
+	public static BufferedImage logo;
+	
 	Handler handler;
 	Camera cam;
 	static Texture tex;
 
 	Random rand = new Random();
 
+	public static int LEVEL = 1;
+	
 	private void init() {
-		new GameClient();
+
 		
 		WIDTH = getWidth();
 		HEIGHT = getHeight();
@@ -54,20 +61,28 @@ public class Game extends Canvas implements Runnable {
 
 		BufferedImageLoader loader = new BufferedImageLoader();
 		level = loader.loadImage("/level.png");
-
-		handler = new Handler();
+		logo = loader.loadImage("/logo.png");
+		
+		cam = new Camera(0, 0);
+		handler = new Handler(cam);
 
 		cam = new Camera(0, 0);
 
-		LoadImageLevel(level);
-
-		// handler.addObject(new Player(100, 100, handler, ObjectId.Player));
-
-		// handler.createLevel();
+		handler.LoadImageLevel(level);
 
 		this.addKeyListener(new KeyInput(handler));
+
+		try {
+			initAudio();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
 	}
 
+
+	
 	public synchronized void start() {
 		if (running)
 			return;
@@ -75,6 +90,16 @@ public class Game extends Canvas implements Runnable {
 		running = true;
 		thread = new Thread(this);
 		thread.start();
+	}
+
+	public static void initAudio() throws Exception {
+		AudioInputStream gameStream = AudioSystem
+				.getAudioInputStream(new File("C:\\Users\\Patrick\\git\\DUNDUNDUN\\DUNDUNDUN\\audio\\music.wav"));
+		Clip clip = AudioSystem.getClip();
+		clip.open(gameStream);
+		clip.loop(Clip.LOOP_CONTINUOUSLY);
+		FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+		gainControl.setValue(-15f);
 	}
 
 	public void run() {
@@ -118,8 +143,6 @@ public class Game extends Canvas implements Runnable {
 				cam.tick(handler.object.get(i));
 			}
 		}
-	
-
 	}
 
 	private void render() {
@@ -138,7 +161,7 @@ public class Game extends Canvas implements Runnable {
 		camWidth = getWidth();
 		camHeight = getHeight();
 
-		g.setColor(Color.cyan);
+		g.setColor(new Color(91, 140, 245));
 		g.fillRect(0, 0, getWidth(), getHeight());
 
 		// Camera control
@@ -154,47 +177,14 @@ public class Game extends Canvas implements Runnable {
 		bs.show();
 	}
 
-	private void LoadImageLevel(BufferedImage image) {
-		int levelWidth = image.getWidth();
-		int levelHeight = image.getHeight();
-
-		Logger.info("width, height " + levelWidth + " " + levelHeight);
-
-		for (int xx = 0; xx < levelHeight; xx++) {
-			for (int yy = 0; yy < levelWidth; yy++) {
-				int pixel = image.getRGB(xx, yy);
-				int red = (pixel >> 16) & 0xff;
-				int green = (pixel >> 8) & 0xff;
-				int blue = (pixel) & 0xff;
-
-				if (red == 255 && green == 255 & blue == 255)
-					handler.addObject(new Block(xx * 32, yy * 32, 1, ObjectId.Block)); // grass
-				
-				if (red == 128 && green == 128 & blue == 128)
-					handler.addObject(new Block(xx * 32, yy * 32, 0, ObjectId.Block)); // dirt
-				
-				if (red == 0 && green == 0 & blue == 255)
-					handler.addObject(new Player(xx * 32, yy * 32, handler, ObjectId.Player));
-				
-				if (red == 255 && green == 0 & blue == 0)
-					handler.addObject(new Sign(xx * 32, yy * 32, "I love me some pure dank memes xdxdxd", ObjectId.Sign));
-				
-				if (red == 255 && green == 255 & blue == 0)
-					handler.addObject(new Sign(xx * 32, yy * 32, "", ObjectId.Sign));
-				
-				if (red == 255 && green == 0 & blue == 255)
-					handler.addObject(new QuickSand(xx * 32, yy * 32, ObjectId.QuickSand));
-			}
-		}
-
-	}
+	
 
 	public static Texture getInstance() {
 		return tex;
 	}
 
 	public static void main(String args[]) {
-		new Window(800, 600, "DUNDUNDUN: Version 0.1!", new Game());
+		new Window(800, 600, "Duck Parkour: Alpha 0.1!", new Game());
 		Console.displayConsole();
 	}
 

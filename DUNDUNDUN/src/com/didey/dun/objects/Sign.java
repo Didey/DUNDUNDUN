@@ -45,20 +45,10 @@ public class Sign extends GameObject {
 	}
 	
 	public void render(Graphics g) {
-		signX = (int)x;
-		signY = (int)y;
 		int drawX = write.length();
-		//System.out.println(Integer.toString(drawX));
 		g.drawImage(image, (int)x, (int)y, null);
 		g.setColor(Color.BLACK);
-		g.drawString(write, signX - offset, signY - 50);
-	
-		Graphics2D g2d = (Graphics2D) g;
-		if(Game.debugMode){
-			g.setColor(Color.RED);
-			g2d.draw(getBounds());
-		}
-		
+		g.drawString(write, (int)x - offset *2, (int)y - 50);
 	}
 
 	public Rectangle getBounds() {

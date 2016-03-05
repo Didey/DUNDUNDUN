@@ -5,14 +5,16 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
 import com.didey.dun.engine.Animation;
-import com.didey.dun.engine.GameClient;
 import com.didey.dun.engine.GameObject;
 import com.didey.dun.engine.KeyInput;
 import com.didey.dun.engine.ObjectId;
 import com.didey.dun.engine.Texture;
+import com.didey.dun.gui.BufferedImageLoader;
+import com.didey.dun.gui.Camera;
 import com.didey.dun.gui.Game;
 import com.didey.dun.gui.Handler;
 
@@ -22,26 +24,38 @@ public class Player extends GameObject {
 
 	public static float gravity = 0.5f;
 	public static float MAX_SPEED = 10;
+	public static float MOVE_SPEED = 8;
 	public static boolean facingRight = true;
-	public static float MOVE_SPEED = 5;
-	
-	
-	public static boolean showInstructions = false;
 
-	private Font pausedFont = new Font("monospace", Font.PLAIN, 34);
+	public static boolean showInstructions = false;
+	public static boolean canGlide = false;
+
+	public static Font pausedFont = new Font("consolas", Font.PLAIN, 34);
+
 	public static int getPX;
 	public static int getPY;
-	private static int PLAYER_ANIM_SPEED = 10;
-	
+	private static int PLAYER_ANIM_SPEED = 7;
+	public static float hp = 500.0f;
+
+	public static boolean isSlowed = false;
+
+	public static float setBulletSpeed = 0.2f;
+
 	private Handler handler;
+	private Camera cam;
 
 	Texture tex = Game.getInstance();
 
+	public static float startingX, startingY;
+
 	private Animation playerWalk;
 
-	public Player(float x, float y, Handler handler, ObjectId id) {
+	public Player(float x, float y, Handler handler, Camera cam, ObjectId id) {
 		super(x, y, id);
 		this.handler = handler;
+		this.cam = cam;
+		startingX = (int) x;
+		startingY = (int) y;
 
 		playerWalk = new Animation(PLAYER_ANIM_SPEED, tex.player[1], tex.player[2]);
 	}
@@ -50,67 +64,55 @@ public class Player extends GameObject {
 		for (int i = 0; i < handler.object.size(); i++) {
 			GameObject tempObject = handler.object.get(i);
 
-			
-			if (tempObject.getId() == ObjectId.QuickSand) {
-				if (getBounds().intersects(tempObject.getBounds())) {
-					MOVE_SPEED = (int)2.5;
-					velY = 0;
-					falling = false;
-					jumping = false;
-					KeyInput.jumps = 0;
-				} else {
-					falling = true;
-				}
-			}
-			
-			
-			if (tempObject.getId() == ObjectId.Sign) {
-				if (getBounds().intersects(tempObject.getBounds())) {
-					// sign collision
-				} else {
-					// when not colliding w/sign
-
-				}
-			}
-
 			if (tempObject.getId() == ObjectId.Block) {
 				if (getBoundsTop().intersects(tempObject.getBounds())) {
 					y = tempObject.getY() + 32;
 					velY = 0;
-					MOVE_SPEED = (int)5;
 				}
-
 				if (getBounds().intersects(tempObject.getBounds())) {
 					y = tempObject.getY() - height;
 					velY = 0;
 					falling = false;
 					jumping = false;
 					KeyInput.jumps = 0;
-					MOVE_SPEED = (int)5;
+					canGlide = false;
 				} else
 					falling = true;
 
 				if (getBoundsRight().intersects(tempObject.getBounds())) {
 					x = tempObject.getX() - width;
 					KeyInput.jumps = 0;
-					MOVE_SPEED = (int)5;
+					canGlide = true;
 				}
-
 				if (getBoundsLeft().intersects(tempObject.getBounds())) {
 					x = tempObject.getX() + 35;
 					KeyInput.jumps = 0;
-					MOVE_SPEED = (int)5;
+					canGlide = true;
+				}
+			} else if (tempObject.getId() == ObjectId.Flag) {
+				// switch levels
+				if (getBounds().intersects(tempObject.getBounds())) {
+					handler.switchLevel();
 				}
 			}
-			
+
 		}
 	}
 
 	public void tick(LinkedList<GameObject> object) {
 		if (!Game.isPaused) {
-
-			x += velX;
-			y += velY;
+			if (!canGlide) {
+				x += velX;
+				y += velY;
+			} else {
+				if (KeyInput.jumps <= 2) {
+					x += velX;
+					y += velY;
+				} else {
+					x += velX;
+					y += velY / 5;
+				}
+			}
 
 			getPX = (int) x;
 			getPY = (int) y;
@@ -127,26 +129,21 @@ public class Player extends GameObject {
 			}
 		}
 		Collision(object);
-
 		playerWalk.runAnimation();
 	}
 
 	public void render(Graphics g) {
-		
 		g.setFont(pausedFont);
+
+		if (Game.LEVEL == 1) {
+			g.drawImage(Game.logo, (int) startingX - 100, (int) startingY - 200, 484, 197, null);
+		}
 
 		if (Game.isPaused) {
 			g.setColor(Color.MAGENTA);
-			g.drawString("Game is paused!", getPX - 97, getPY - 10);
+			// g.drawString("Game is paused!", getPX - 97, getPY - 10);
 		}
-		
-		
-		GameClient.sendServerInfo();
-		
-		g.setColor(Color.RED);
-		g.fillRect(GameClient.mpX, GameClient.mpY, (int)width, (int)height);
-		
-		g.setColor(Color.BLUE);
+
 		if (velX > 0 && !jumping) {
 			playerWalk.drawAnimation(g, (int) x, (int) y, (int) width, (int) height);
 		} else if (velX > 0 && jumping) {
@@ -184,12 +181,12 @@ public class Player extends GameObject {
 			g2d.draw(getBoundsTop());
 
 			g.setColor(Color.BLUE);
-			g.drawString("PLAYER X: " + Integer.toString(getPX), getPX - 375, getPY - 200);
-			g.drawString("PLAYER Y: " + Integer.toString(getPY), getPX - 375, getPY - 150);
+			g.drawString("Player X: " + Integer.toString(getPX), getPX - 375, getPY - 200);
+			g.drawString("Player Y: " + Integer.toString(getPY), getPX - 375, getPY - 150);
 			g.drawString("FPS: " + Integer.toString(Game.fps), getPX - 375, getPY - 100);
-			g.drawString("TICKS: " + Integer.toString(Game.ticks), getPX - 375, getPY - 50);
-			g.drawString("JUMPS: " + Integer.toString(KeyInput.jumps), getPX - 375, getPY);
-			g.drawString("MOVE_SPEED: " + Float.toString(MOVE_SPEED), getPX + 100, getPY - 200);
+			g.drawString("Ticks: " + Integer.toString(Game.ticks), getPX - 375, getPY - 50);
+			g.drawString("Jumps: " + Integer.toString(KeyInput.jumps), getPX - 375, getPY);
+			g.drawString("Move Speed: " + Float.toString(MOVE_SPEED), getPX + 100, getPY - 200);
 		}
 
 	}
