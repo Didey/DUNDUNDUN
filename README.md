@@ -1,33 +1,3 @@
 # DUNDUNDUN
-Platformer made in Java, just for fun. Maybe something more in the future.
 
-developed by TheDrink with help from Dx724
-
-#Screenshots
-
-![Signs!](http://i.imgur.com/TScjPCW.png)
-
-
-#Controls
-Pause - e
-
-Debug - F5
-
-Move Left - a
-
-Move Right - d
-
-Jump - Space (or w)
-
-Console - /
-
-Quit - Escape
-
-
-# Logging
-Change logging value to filter different logged items.
-
-# Authors
-TheDrink
-
-Dx724
+THIS PROJECT IS NOW OUTDATED, AND HAS BEEN MOVED TO https://github.com/Didey/Sude
